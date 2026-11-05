@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import io.github.sor2171.dices.core.entity.DiceData
 import io.github.sor2171.dices.core.utils.DiceDataCollection
 import io.github.sor2171.dices.core.entity.DiceRollRecord
 import io.github.sor2171.dices.ui.component.DiceValueCard
@@ -44,6 +45,7 @@ fun RollRecordCard(record: DiceRollRecord) {
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
+            val expressionText =expression(record.diceResults)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -55,7 +57,7 @@ fun RollRecordCard(record: DiceRollRecord) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "总和: ${record.totalSum}",
+                    text = "总和: $expressionText=${record.totalSum}",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
@@ -75,3 +77,10 @@ fun RollRecordCard(record: DiceRollRecord) {
                 }
             }
         }
+fun expression(dices: List<DiceData>): String {
+    val counts = dices.groupBy { it.diceType }
+    val parts = counts.map { (type, list) ->
+        "${list.size}$type"
+    }
+    return parts.joinToString("+")
+}
